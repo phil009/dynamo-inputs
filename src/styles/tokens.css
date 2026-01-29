@@ -1,0 +1,33 @@
+/* ===========================================
+   ASG Design Tokens — Single Source of Truth
+   =========================================== */
+
+:root {
+  /* ── Brand ── */
+  --asg-dark: #005641;
+  --asg-light: #55C48F;
+
+  /* ── Base Palette ── */
+  --black: #1E242B;
+  --white: #FFFFFF;
+  --offwhite: #FAFAFA;
+  --stepper-bg: #EAF6EE;
+  --text-secondary: #4A5464;
+  --text-tertiary: #8A819B;
+  --warning-yellow: #8A8A1F;
+  --error-red: #E5533D;
+  --unselected: #0ADFE0;
+
+  /* ── Typography ── */
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-size-sm: 0.75rem;
+  --font-size-base: 0.875rem;
+  --font-size-label: 0.8125rem;
+
+  /* ── Spacing ── */
+  --input-height: 48px;
+  --input-padding-x: 14px;
+  --input-padding-y: 12px;
+  --input-radius: 6px;
+  --input-gap: 8px;
+}

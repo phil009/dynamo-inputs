@@ -1,0 +1,133 @@
+---
+import '../styles/tokens.css';
+import '../styles/input.css';
+---
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ASG Input Components — Demo</title>
+  <style>
+    body {
+      font-family: var(--font-family);
+      background: var(--offwhite);
+      color: var(--black);
+      margin: 0;
+      padding: 32px;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 8px; }
+    h2 { font-size: 1.1rem; margin: 32px 0 16px; color: var(--text-secondary); }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+    }
+    .section {
+      background: var(--white);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .color-swatch-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 80px;
+      height: 50px;
+      border-radius: 6px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: white;
+      padding: 4px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>ASG Dynamic Input System</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">
+    Each state uses <strong>one color</strong> — border, label text, and label background are derived automatically via <code>color-mix()</code>.
+  </p>
+
+  <h2>All Variants</h2>
+  <div class="section">
+    <div class="demo-grid" id="demo-root"></div>
+  </div>
+
+  <h2>State Showcase (Text Input)</h2>
+  <div class="section">
+    <div class="demo-grid" id="state-root"></div>
+  </div>
+
+  <h2>Color-Mix Auto-Shading Demo</h2>
+  <div class="section">
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
+      These swatches show how <code>color-mix(in srgb, COLOR, white 88%)</code> derives lighter shades.
+      Change <code>--error-red</code> in tokens.css to orange — watch everything update.
+    </p>
+    <div class="color-swatch-row">
+      <div class="color-swatch" style="background: var(--error-red);">--error-red</div>
+      <div class="color-swatch" style="background: color-mix(in srgb, var(--error-red), white 40%);">40% white</div>
+      <div class="color-swatch" style="background: color-mix(in srgb, var(--error-red), white 60%);">60% white</div>
+      <div class="color-swatch" style="background: color-mix(in srgb, var(--error-red), white 88%); color: var(--error-red);">88% (label bg)</div>
+    </div>
+    <div class="color-swatch-row">
+      <div class="color-swatch" style="background: var(--asg-light);">--asg-light</div>
+      <div class="color-swatch" style="background: color-mix(in srgb, var(--asg-light), white 40%);">40% white</div>
+      <div class="color-swatch" style="background: color-mix(in srgb, var(--asg-light), white 60%);">60% white</div>
+      <div class="color-swatch" style="background: color-mix(in srgb, var(--asg-light), white 88%); color: var(--asg-light);">88% (label bg)</div>
+    </div>
+    <div class="color-swatch-row">
+      <div class="color-swatch" style="background: var(--warning-yellow);">--warning-yellow</div>
+      <div class="color-swatch" style="background: color-mix(in srgb, var(--warning-yellow), white 40%);">40% white</div>
+      <div class="color-swatch" style="background: color-mix(in srgb, var(--warning-yellow), white 60%);">60% white</div>
+      <div class="color-swatch" style="background: color-mix(in srgb, var(--warning-yellow), white 88%); color: var(--warning-yellow);">88% (label bg)</div>
+    </div>
+  </div>
+
+  <script>
+    import { render, h } from 'preact';
+    import { Input } from '../components/inputs';
+
+    const demoRoot = document.getElementById('demo-root')!;
+    render(
+      h('div', { style: { display: 'contents' } },
+        h(Input, { variant: 'text', label: 'File Reference Name', name: 'fileRef', placeholder: 'Linda_Development Loan' }),
+        h(Input, { variant: 'phone', label: 'Phone Number', name: 'phone', countryCode: '+44' }),
+        h(Input, { variant: 'date', label: 'Date Picker', name: 'date' }),
+        h(Input, { variant: 'file', label: 'Document Upload', name: 'doc', placeholder: 'Document_upload.pdf' }),
+        h(Input, { variant: 'address', label: 'Private Address', name: 'address', placeholder: '123 Main Street, London, SW1A 1AA, United Kingdom' }),
+        h(Input, { variant: 'select', label: 'Manager', name: 'manager', options: [
+          { label: 'Tonie Thomas', value: 'tonie' },
+          { label: 'John Smith', value: 'john' },
+          { label: 'Jane Doe', value: 'jane' },
+        ]}),
+        h(Input, { variant: 'currency', label: 'Interest Rate', name: 'rate', suffix: '%' }),
+        h(Input, { variant: 'currency', label: 'Total Exit Fee', name: 'exitFee', prefix: '\u00A3', suffix: '%' }),
+        h(Input, { variant: 'currency', label: 'Maximum Term', name: 'maxTerm', suffix: 'Months' }),
+      ),
+      demoRoot
+    );
+
+    const stateRoot = document.getElementById('state-root')!;
+    render(
+      h('div', { style: { display: 'contents' } },
+        h(Input, { variant: 'text', label: 'Default State', name: 's1' }),
+        h(Input, { variant: 'text', label: 'Required Field', name: 's2', required: true }),
+        h(Input, { variant: 'text', label: 'With Validation', name: 's3', validationRules: [
+          { type: 'minLength', value: 16, message: 'Minimum 16 characters' }
+        ]}),
+      ),
+      stateRoot
+    );
+  </script>
+</body>
+</html>

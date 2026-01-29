@@ -1,0 +1,247 @@
+/* ===========================================
+   Input Component — Auto-Shading State System
+
+   KEY CONCEPT: Each state sets ONE variable
+   (--state-color) and all visual properties
+   are derived from it via color-mix().
+   =========================================== */
+
+/* ── Wrapper ── */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-family);
+  width: 100%;
+}
+
+/* ── Field container (border + label + input) ── */
+.input-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--input-gap);
+  min-height: var(--input-height);
+  padding: 0 var(--input-padding-x);
+  border-radius: var(--input-radius);
+  background: var(--white);
+  cursor: text;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  /* ── Auto-shading derivations ── */
+  --border-color: var(--state-color);
+  --label-color: var(--state-color);
+  --label-bg: color-mix(in srgb, var(--state-color), var(--white) 88%);
+
+  border: 1.5px solid var(--border-color);
+}
+
+/* ── State assignments (one color each) ── */
+.input-field[data-state="default"] {
+  --state-color: var(--unselected);
+}
+
+.input-field[data-state="active"] {
+  --state-color: var(--asg-light);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--asg-light), transparent 80%);
+}
+
+.input-field[data-state="error"] {
+  --state-color: var(--error-red);
+}
+
+.input-field[data-state="warning"] {
+  --state-color: var(--warning-yellow);
+}
+
+.input-field[data-state="idle"] {
+  --state-color: var(--text-tertiary);
+}
+
+.input-field[data-state="disabled"] {
+  --state-color: var(--text-tertiary);
+  opacity: 0.6;
+  pointer-events: none;
+  background: var(--offwhite);
+}
+
+/* ── Floating label ── */
+.input-label {
+  position: absolute;
+  top: 50%;
+  left: var(--input-padding-x);
+  transform: translateY(-50%);
+  font-size: var(--font-size-base);
+  color: var(--text-tertiary);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  padding: 0 4px;
+  background: transparent;
+  line-height: 1;
+}
+
+/* Label floats up when field has value or is focused */
+.input-field[data-float="true"] .input-label {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: var(--font-size-sm);
+  color: var(--label-color);
+  background: var(--label-bg);
+  border-radius: 3px;
+  padding: 1px 6px;
+}
+
+/* ── Native input reset ── */
+.input-control {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  color: var(--black);
+  padding: var(--input-padding-y) 0;
+  width: 100%;
+  min-width: 0;
+}
+
+.input-control::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* ── Prefix / Suffix ── */
+.input-prefix,
+.input-suffix {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ── Icon ── */
+.input-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* ── Validation message ── */
+.input-message {
+  font-size: var(--font-size-sm);
+  padding-left: var(--input-padding-x);
+  min-height: 1.2em;
+}
+
+.input-message[data-severity="error"] {
+  color: var(--error-red);
+}
+
+.input-message[data-severity="warning"] {
+  color: var(--warning-yellow);
+}
+
+/* ── Checklist validation (✓ / ✕) ── */
+.input-checklist {
+  list-style: none;
+  padding: 4px 0 0 var(--input-padding-x);
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.input-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.input-checklist li[data-passed="true"] {
+  color: var(--asg-dark);
+}
+
+.input-checklist li[data-passed="false"] {
+  color: var(--error-red);
+}
+
+/* ── Select variant ── */
+.input-field.variant-select {
+  cursor: pointer;
+}
+
+.input-select-native {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  color: var(--black);
+  padding: var(--input-padding-y) 0;
+  appearance: none;
+  cursor: pointer;
+}
+
+.select-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+/* ── File variant ── */
+.input-file-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--input-gap);
+  flex: 1;
+  padding: var(--input-padding-y) 0;
+  cursor: pointer;
+  color: var(--black);
+  font-size: var(--font-size-base);
+}
+
+.input-file-trigger span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.input-file-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: var(--asg-dark);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+}
+
+/* ── Date variant ── */
+.input-date-trigger {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: var(--asg-dark);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+}
+
+/* ── Currency variant (prefix + suffix) ── */
+.input-field.variant-currency {
+  gap: 4px;
+}
+
+.currency-suffix-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
