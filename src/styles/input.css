@@ -31,7 +31,7 @@
 
   /* ── Auto-shading derivations ── */
   --border-color: var(--state-color);
-  --label-color: var(--state-color);
+  --label-color: color-mix(in srgb, var(--state-color), var(--black) 60%);
   --label-bg: color-mix(in srgb, var(--state-color), var(--white) 88%);
 
   border: 1.5px solid var(--border-color);
@@ -164,27 +164,322 @@
   color: var(--error-red);
 }
 
-/* ── Select variant ── */
+/* ══════════════════════════════════════════
+   Custom Select Variant
+   ══════════════════════════════════════════ */
+
 .input-field.variant-select {
   cursor: pointer;
 }
 
-.input-select-native {
+.custom-select {
   flex: 1;
-  border: none;
+  position: relative;
   outline: none;
-  background: transparent;
-  font-size: var(--font-size-base);
-  font-family: inherit;
-  color: var(--black);
+  min-width: 0;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--input-gap);
   padding: var(--input-padding-y) 0;
-  appearance: none;
   cursor: pointer;
+  width: 100%;
+}
+
+.custom-select-value {
+  flex: 1;
+  font-size: var(--font-size-base);
+  color: var(--black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-select-value.placeholder {
+  color: var(--text-tertiary);
 }
 
 .select-chevron {
   flex-shrink: 0;
   transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.select-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* ── Shared dropdown panel (used by Select + Phone) ── */
+.custom-select-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  min-width: 100%;
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--white);
+  border: 1.5px solid color-mix(in srgb, var(--asg-light), var(--white) 40%);
+  border-radius: var(--input-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  z-index: 100;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--asg-light), var(--white) 60%) transparent;
+}
+
+.custom-select-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  font-size: var(--font-size-base);
+  color: var(--black);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.12s;
+  user-select: none;
+}
+
+.custom-select-option.focused {
+  background: color-mix(in srgb, var(--asg-light), var(--white) 88%);
+}
+
+.custom-select-option.selected {
+  color: var(--asg-dark);
+  font-weight: 600;
+}
+
+.custom-select-option .check-icon {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--asg-dark);
+}
+
+/* ══════════════════════════════════════════
+   Phone Country Picker
+   ══════════════════════════════════════════ */
+
+.phone-country-picker {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.phone-country-trigger {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px 2px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  color: var(--black);
+  transition: background 0.15s;
+}
+
+.phone-country-trigger:hover {
+  background: color-mix(in srgb, var(--asg-light), var(--white) 90%);
+}
+
+.phone-country-flag {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.phone-country-code {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.phone-country-chevron {
+  transition: transform 0.2s;
+  color: var(--text-tertiary);
+  display: flex;
+}
+
+.phone-country-chevron.open {
+  transform: rotate(180deg);
+}
+
+.phone-divider {
+  width: 1px;
+  height: 24px;
+  background: color-mix(in srgb, var(--text-tertiary), var(--white) 70%);
+  flex-shrink: 0;
+}
+
+.phone-country-dropdown {
+  min-width: 260px;
+  left: -14px;
+}
+
+.phone-option-flag {
+  font-size: 1.1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.phone-option-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phone-option-code {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════
+   Calendar / Date Picker
+   ══════════════════════════════════════════ */
+
+.calendar-anchor {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.calendar-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 280px;
+  background: var(--white);
+  border: 1.5px solid color-mix(in srgb, var(--asg-light), var(--white) 40%);
+  border-radius: var(--input-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  z-index: 100;
+  padding: 12px;
+  user-select: none;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.calendar-title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--black);
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+}
+
+.calendar-nav:hover {
+  background: color-mix(in srgb, var(--asg-light), var(--white) 88%);
+  color: var(--asg-dark);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-day-labels {
+  margin-bottom: 4px;
+}
+
+.calendar-day-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 4px 0;
+  font-weight: 500;
+}
+
+.calendar-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  color: var(--black);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.calendar-day:hover:not(.disabled):not(.selected) {
+  background: color-mix(in srgb, var(--asg-light), var(--white) 88%);
+}
+
+.calendar-day.outside {
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.calendar-day.today:not(.selected) {
+  font-weight: 700;
+  color: var(--asg-dark);
+  background: color-mix(in srgb, var(--asg-light), var(--white) 85%);
+}
+
+.calendar-day.selected {
+  background: var(--asg-dark);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.calendar-day.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.calendar-footer {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--text-tertiary), var(--white) 80%);
+  display: flex;
+  justify-content: center;
+}
+
+.calendar-today-btn {
+  border: none;
+  background: transparent;
+  color: var(--asg-dark);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.calendar-today-btn:hover {
+  background: color-mix(in srgb, var(--asg-light), var(--white) 85%);
 }
 
 /* ── File variant ── */
